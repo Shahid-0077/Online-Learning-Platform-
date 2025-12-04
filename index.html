@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShikshaHub — Online Learning Platform (India)</title>
+  <meta name="description" content="ShikshaHub — Indian online learning platform with courses, enrollment, and student testimonials." />
+  <style>
+    :root{
+      --bg:#fffdfc; --card:#ffffff; --accent:#0b6b4f; --accent2:#f59e0b; --muted:#6b7280; --radius:12px; --max:1100px; font-family:Inter, system-ui, 'Noto Sans', Roboto, Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#062024}
+    .wrap{max-width:var(--max);margin:22px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2ea58a);display:grid;place-items:center;color:white;font-weight:800}
+    h1{margin:0;font-size:20px}
+    nav{display:flex;gap:8px}
+    .btn{padding:8px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
+    .btn.secondary{background:transparent;border:1px solid rgba(11,107,79,0.12);color:var(--accent)}
+
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center;margin-top:18px}
+    .hero .intro{padding:18px;border-radius:var(--radius);background:linear-gradient(180deg,#fff,#f7fffb);box-shadow:0 8px 20px rgba(4,10,12,0.04)}
+    .hero h2{margin:0}
+    .muted{color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
+    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 8px 24px rgba(2,6,23,0.04)}
+
+    /* Course list */
+    .controls{display:flex;gap:8px;align-items:center}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 10px;border-radius:999px;border:1px solid #eef6f1;background:#fbfffe;cursor:pointer}
+
+    .courses{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .course{display:flex;gap:12px;border-radius:10px;overflow:hidden;border:1px solid #eef5f2}
+    .thumb{width:160px;height:110px;background:#f0fbf8;display:grid;place-items:center;font-weight:700}
+    .c-body{padding:10px}
+    .price{font-weight:800;color:var(--accent2)}
+    .meta{font-size:13px;color:var(--muted)}
+
+    /* Sidebar */
+    .testimonial{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfffb);border:1px solid #eef6f1}
+    .instructor{display:flex;gap:12px;align-items:center}
+    .avatar{width:56px;height:56px;border-radius:10px;background:#f1fbf7;display:grid;place-items:center;font-weight:800}
+
+    /* Course modal / checkout */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);padding:18px}
+    .panel{width:min(900px,98%);max-height:90vh;overflow:auto;background:var(--card);border-radius:12px;padding:18px}
+
+    footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
+
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .courses{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">SH</div>
+        <div>
+          <h1>ShikshaHub</h1>
+          <div class="muted" style="font-size:13px">Learn • Upskill • Grow — India-focused courses</div>
+        </div>
+      </div>
+
+      <nav>
+        <button class="btn" onclick="scrollTo('coursesSection')">Courses</button>
+        <button class="btn secondary" onclick="scrollTo('testimonials')">Testimonials</button>
+        <button class="btn secondary" onclick="scrollTo('instructors')">Instructors</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="intro">
+          <h2>Grow your skills with practical online courses</h2>
+          <p class="muted">Short courses, certificates, and hands-on projects crafted for learners in India — affordable pricing in ₹, regional mentors, and community support.</p>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn" onclick="scrollTo('coursesSection')">Browse Courses</button>
+            <button class="btn secondary" onclick="openEnrollDemo()">How Enrollment Works</button>
+          </div>
+          <div style="margin-top:12px;color:var(--muted);font-size:13px">Popular categories: Web Dev • Data Science • Design • Digital Marketing • Spoken English</div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h3 style="margin-top:0">Quick Enrollment</h3>
+            <p class="muted">Select a course then click Enroll — this demo shows a client-side checkout flow (no payments).</p>
+            <div style="margin-top:10px"><strong>Enrolled:</strong> <span id="enrolledCount">0</span></div>
+            <div style="margin-top:10px"><button class="btn" onclick="viewMyCourses()">My Courses</button></div>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <h3 style="margin-top:0">Student Testimonial</h3>
+            <div class="testimonial" id="testimonialBox">"ShikshaHub's project-based courses helped me switch careers in 6 months." — Priya, Bengaluru</div>
+          </div>
+        </aside>
+      </section>
+
+      <div class="grid">
+        <section>
+          <div id="coursesSection" class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h2 style="margin:0">Courses</h2>
+              <div class="meta">Updated: Dec 1, 2025</div>
+            </div>
+
+            <div style="margin-top:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+              <div class="controls">
+                <div class="chips" id="categoryChips"></div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input id="q" placeholder="Search courses" style="padding:8px;border-radius:8px;border:1px solid #eef6f1" />
+                <select id="sort" onchange="renderCourses()" style="padding:8px;border-radius:8px;border:1px solid #eef6f1">
+                  <option value="popular">Popular</option>
+                  <option value="new">Newest</option>
+                  <option value="priceAsc">Price: Low → High</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="coursesList" class="courses" style="margin-top:12px"></div>
+            <div style="margin-top:12px;text-align:center"><button class="btn secondary" onclick="loadMoreCourses()">Load more</button></div>
+          </div>
+
+          <div id="instructors" class="card" style="margin-top:16px">
+            <h3 style="margin-top:0">Instructors</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px" id="instructorList"></div>
+          </div>
+
+          <div id="faq" class="card" style="margin-top:16px">
+            <h3 style="margin-top:0">FAQ</h3>
+            <div class="muted">How long does access last? — Most courses include 1 year of access. Is there a certificate? — Yes, after completing course project(s).</div>
+          </div>
+        </section>
+
+        <aside>
+          <div class="card" id="testimonials" style="position:sticky;top:22px">
+            <h3 style="margin-top:0">Student Testimonials</h3>
+            <div id="testiList" style="display:flex;flex-direction:column;gap:10px;margin-top:8px"></div>
+            <div style="margin-top:10px;display:flex;gap:8px"><button class="btn" onclick="prevTesti()">Prev</button><button class="btn" onclick="nextTesti()">Next</button></div>
+          </div>
+
+          <div class="card" style="margin-top:14px" id="plans">
+            <h3 style="margin-top:0">Membership Plans</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+              <div style="padding:10px;border-radius:8px;border:1px solid #eef6f1;background:#fbfffb"><strong>Monthly</strong><div class="muted">₹499 / month • Access to all beginner courses</div></div>
+              <div style="padding:10px;border-radius:8px;border:1px solid #eef6f1;background:#fbfffb"><strong>Annual</strong><div class="muted">₹4999 / year • Full access + certificate</div></div>
+            </div>
+            <div style="margin-top:10px"><button class="btn" onclick="subscribePlan()">Subscribe (demo)</button></div>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <h3 style="margin-top:0">Contact & Support</h3>
+            <div class="muted">Email: support@shikshahub.in<br/>Phone: +91 80 1234 5678</div>
+            <div style="margin-top:8px"><button class="btn secondary" onclick="openContact()">Send a message</button></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      <div>© <span id="year"></span> ShikshaHub — Online learning platform (demo)</div>
+    </footer>
+  </div>
+
+  <!-- Course modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="panel" id="modalPanel"></div>
+  </div>
+
+  <script>
+    // Sample data
+    const COURSES = [
+      {id:'c1',title:'Full‑Stack Web Development',category:'Web Development',price:6999,level:'Beginner → Advanced',duration:'12 weeks',students:1240,instructor:'Akhil',desc:'Build real web apps using HTML/CSS, JS, Node and React. Project-based.'},
+      {id:'c2',title:'Data Science with Python',category:'Data Science',price:5999,level:'Intermediate',duration:'10 weeks',students:820,instructor:'Dr. Meera',desc:'Data analysis, ML basics, and real-world datasets.'},
+      {id:'c3',title:'UI/UX Design Fundamentals',category:'Design',price:3499,level:'Beginner',duration:'6 weeks',students:430,instructor:'Sana',desc:'Principles of design, Figma workflows, and portfolio projects.'},
+      {id:'c4',title:'Digital Marketing (Practical)',category:'Marketing',price:2999,level:'Beginner',duration:'8 weeks',students:980,instructor:'Rohit',desc:'SEO, Ads, Social growth and campaign strategies.'},
+      {id:'c5',title:'Spoken English for Professionals',category:'Communication',price:1999,level:'Beginner',duration:'4 weeks',students:1520,instructor:'Priya',desc:'Conversational practice, interviews & presentation skills.'}
+    ];
+
+    const INSTRUCTORS = [
+      {id:'i1',name:'Akhil Rao',bio:'Senior Developer, 8+ years — teaches web & backend.'},
+      {id:'i2',name:'Dr. Meera Joshi',bio:'Data Scientist & researcher — ML practitioner.'},
+      {id:'i3',name:'Sana Kapoor',bio:'Product Designer, ex‑startup — focus on UX.'}
+    ];
+
+    const TESTIMONIALS = [
+      '„I completed the Full‑Stack course and built a portfolio that got me interviews.“ — Ankit, Pune',
+      '„The Data Science projects were practical and helped me get my first internship." — Nidhi, Delhi',
+      '„Great mentors and supportive community. The UI/UX capstone was excellent." — Meer, Chennai'
+    ];
+
+    // State
+    let shownCourses = 4;
+    let enrolled = JSON.parse(localStorage.getItem('sh_enrolled_v1') || '[]');
+    let testiIndex = 0;
+
+    // Helpers
+    function $(sel){ return document.querySelector(sel); }
+
+    // Render categories
+    function renderCategories(){ const cats = Array.from(new Set(COURSES.map(c=>c.category))); const area = document.getElementById('categoryChips'); area.innerHTML=''; const all = document.createElement('button'); all.className='chip'; all.textContent='All'; all.onclick = ()=> renderCourses(); area.appendChild(all); cats.forEach(c=>{ const b = document.createElement('button'); b.className='chip'; b.textContent = c; b.onclick = ()=> renderCourses(c); area.appendChild(b); }); }
+
+    // Render courses
+    function renderCourses(filter='All'){ const q = $('#q').value.trim().toLowerCase(); let list = COURSES.slice(); if(filter && filter!=='All') list = list.filter(x=> x.category===filter); if(q) list = list.filter(x=> (x.title + x.desc + x.instructor).toLowerCase().includes(q)); const sort = $('#sort').value; if(sort==='priceAsc') list.sort((a,b)=>a.price-b.price); if(sort==='new') list.sort((a,b)=> b.students - a.students); // demo
+      const container = $('#coursesList'); container.innerHTML=''; list.slice(0,shownCourses).forEach(c=>{ const el = document.createElement('article'); el.className='course'; el.innerHTML = `
+        <div class="thumb">${c.title.split(' ').map(s=>s[0]).slice(0,3).join('')}</div>
+        <div class="c-body">
+          <div style="display:flex;justify-content:space-between;align-items:start"><div style="font-weight:700">${c.title}</div><div class="price">₹${c.price}</div></div>
+          <div class="meta" style="margin-top:6px">${c.level} • ${c.duration} • ${c.students} students</div>
+          <p class="muted" style="margin-top:8px">${c.desc}</p>
+          <div style="margin-top:8px;display:flex;gap:8px"><button class="btn secondary" onclick="openCourse('${c.id}')">Details</button><button class="btn" onclick="enroll('${c.id}')">Enroll</button></div>
+        </div>
+      `; container.appendChild(el); }); updateEnrolledCount(); }
+
+    function loadMoreCourses(){ shownCourses += 4; renderCourses(); }
+
+    // Course modal
+    function openCourse(id){ const c = COURSES.find(x=>x.id===id); if(!c) return; const panel = $('#modalPanel'); panel.innerHTML = `<h2 style="margin-top:0">${c.title}</h2><div class="muted">Instructor: ${c.instructor} • ${c.duration} • ₹${c.price}</div><div style="margin-top:12px"><strong>Course overview</strong><p class="muted">${c.desc}</p></div><div style="margin-top:12px"><strong>What you'll learn</strong><ul class="muted"><li>Hands-on projects</li><li>Industry-relevant tools</li><li>Certificate on completion</li></ul></div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn" onclick="enroll('${c.id}')">Enroll — ₹${c.price}</button><button class="btn secondary" onclick="closeModal()">Close</button></div>`; $('#modal').style.display='flex'; }
+    function closeModal(){ $('#modal').style.display='none'; }
+
+    // Enrollment demo
+    function enroll(id){ const c = COURSES.find(x=>x.id===id); if(!c) return; // simple client-side flow
+      const existing = enrolled.find(x=> x.id===id); if(existing){ alert('You are already enrolled in this course (demo).'); return; }
+      // Simulate checkout by asking name
+      const name = prompt('Enter your name to enroll (demo)'); if(!name) return; enrolled.push({id,cid:id,name,paid:false,joined:new Date().toISOString()}); localStorage.setItem('sh_enrolled_v1', JSON.stringify(enrolled)); updateEnrolledCount(); alert(`Thanks ${name}! You are enrolled in ${c.title} (demo).`);
+    }
+    function updateEnrolledCount(){ $('#enrolledCount').textContent = enrolled.length; }
+    function viewMyCourses(){ if(enrolled.length===0){ alert('You have not enrolled in any courses.'); return; } const list = enrolled.map(e=>{ const c = COURSES.find(x=>x.id===e.cid); return `${c.title} — joined ${new Date(e.joined).toLocaleDateString('en-IN')}`; }).join('\n'); alert('My Courses (demo):\n\n' + list); }
+
+    // Instructors
+    function renderInstructors(){ const el = document.getElementById('instructorList'); el.innerHTML=''; INSTRUCTORS.forEach(i=>{ const d = document.createElement('div'); d.className='card'; d.style.padding='12px'; d.innerHTML = `<div class="instructor"><div class="avatar">${i.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div><div><div style="font-weight:700">${i.name}</div><div class="muted">${i.bio}</div></div></div><div style="margin-top:8px"><button class="btn secondary" onclick="contactInstructor('${i.id}')">Contact</button></div>`; el.appendChild(d); }); }
+
+    function contactInstructor(id){ const instr = INSTRUCTORS.find(x=>x.id===id); alert(`Contacting ${instr.name} (demo). Email support@shikshahub.in to reach out.`); }
+
+    // Testimonials carousel
+    function renderTestimonials(){ const el = document.getElementById('testiList'); el.innerHTML=''; const t = TESTIMONIALS[testiIndex]; const d = document.createElement('div'); d.className='testimonial'; d.textContent = t; el.appendChild(d); }
+    function prevTesti(){ testiIndex = (testiIndex -1 + TESTIMONIALS.length) % TESTIMONIALS.length; renderTestimonials(); }
+    function nextTesti(){ testiIndex = (testiIndex +1) % TESTIMONIALS.length; renderTestimonials(); }
+
+    // Plans subscribe (demo)
+    function subscribePlan(){ const name = prompt('Enter your name to subscribe (demo)'); if(!name) return; alert(`Thanks ${name}! Subscription demo active.`); }
+
+    function openEnrollDemo(){ alert('Enrollment flow (demo): pick a course, click Enroll, enter your name. For real payments integrate Razorpay/Stripe.'); }
+    function openContact(){ const msg = prompt('Send a short message to support (demo)'); if(msg) alert('Message sent (demo).'); }
+
+    // Search handler
+    document.getElementById('q').addEventListener('input', ()=> renderCourses());
+
+    // Init
+    document.getElementById('year').textContent = new Date().getFullYear(); renderCategories(); renderCourses(); renderInstructors(); renderTestimonials(); updateEnrolledCount();
+
+    // Close modal when background clicked
+    window.addEventListener('click', e=>{ if(e.target.id==='modal') closeModal(); });
+  </script>
+</body>
+</html>
